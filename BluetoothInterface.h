@@ -1,5 +1,8 @@
 #pragma once
 
+#include <Arduino.h>
+#include <SoftwareSerial.h>
+
 #define TIMEOUT 100
 #define LOOP_DELAY 100
 #define READING_DELAY 100

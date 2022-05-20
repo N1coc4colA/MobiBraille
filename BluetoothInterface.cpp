@@ -1,4 +1,4 @@
-#include <SoftwareSerial.h>
+#include "BluetoothInterface.h"
 
 BluetoothInterface::BluetoothInterface(int r, int t)
 	: rx(r), tx(t), mhc(rx, tx)
@@ -79,7 +79,7 @@ void BluetoothInterface::receiveData(int dataSize)
   int inputDataOffset = 0;
   dataset = (char *)malloc(sizeof(char) *(dataSize+1));
   //Null it all or we'll get artefacts
-  nullit(dataset, dataSize+1);
+  nullData(dataset, dataSize+1);
 
   //Notify that's ready
   mhc.print("RDY");

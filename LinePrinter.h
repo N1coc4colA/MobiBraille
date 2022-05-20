@@ -1,5 +1,6 @@
 #pragma once
 
+#include <Arduino.h>
 #include <Servo.h>
 
 #define SPACE_INBETWEEN 11
@@ -12,13 +13,13 @@ public:
 	~LinePrinter();
 
 	void convert(const char lettre);
-	void rotationS_servo(int col);
+	void rotation_servo(int col);
 	void appui_poincon();
 	void imprimer(int c1, int c2);
 	
 	void printLine(const char *ptr, size_t len);
 
-	void setMoveFunc((*func)(int));
+	void setMoveFunc(void (*func)(int));
 
 private:
 	Servo ServoPoincons;

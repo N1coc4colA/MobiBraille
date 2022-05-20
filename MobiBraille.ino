@@ -7,9 +7,9 @@
 #define BI_TX 10
 #define BI_RX 11
 
-BluetoothInterface iface;
-LinePrinter lp;
-I2CController ctrlx;
+BluetoothInterface iface(0, 0);
+LinePrinter lp(0, 0);
+I2CController ctrlx(0, 0, 0, 0, 0);
 //Add the Y Controller!
 
 void deplacement(int v)
@@ -19,7 +19,7 @@ void deplacement(int v)
 void printData(const char *d, size_t l)
 {
   //[TODO] split by line and back to line!
-  lp.printLin(d, l);
+  lp.printLine(d, l);
 }
 
 void setup()
@@ -37,4 +37,3 @@ void loop()
 {
   iface.processData();
 }
-

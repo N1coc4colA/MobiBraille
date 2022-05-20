@@ -11,8 +11,8 @@ LinePrinter::LinePrinter(int p_p, int p_c)
 
 LinePrinter::~LinePrinter()
 {
-  ServoPoincons.deatach();
-  ServoCremaillere.deatach();
+  ServoPoincons.detach();
+  ServoCremaillere.detach();
 }
 
 void LinePrinter::printLine(const char *buff, size_t s)
@@ -25,7 +25,7 @@ void LinePrinter::printLine(const char *buff, size_t s)
 		Serial.println(buff[pos]);
 		convert(buff[pos]);
 		imprimer(colone1, colone2);
-		if (pos != (s-1) {
+		if (pos != (s-1)) {
 			deplacementX(SPACE_BETWEEN);
 		}
 		pos++;
@@ -203,7 +203,7 @@ void LinePrinter::imprimer(int C1, int C2)
 	appui_poincon();
 }
 
-void LinePrinter::setMoveFunc((*func)(int))
+void LinePrinter::setMoveFunc(void (*func)(int))
 {
 	deplacementX = func;
 }

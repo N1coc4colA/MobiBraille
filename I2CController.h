@@ -1,5 +1,6 @@
 #pragma once
 
+#include <Arduino.h>
 #include "Grove_I2C_Motor_Driver.h"
 
 class I2CController
