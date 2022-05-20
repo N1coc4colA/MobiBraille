@@ -46,6 +46,8 @@ public:
 	explicit BluetoothInterface(int rx = 11, int tx = 10);
 	void processData();
 
+  void setTriggers(void (*ptr)(const char *arr, size_t s));
+
 protected:
 	void nullData(char *ptr, size_t s);
 	int readInt();
@@ -56,5 +58,6 @@ private:
 	int rx;
 	int offset = 0;
 	char *dataset = NULL;
+  void (*m_trigger)(const char *, size_t);
 	SoftwareSerial mhc;
 };

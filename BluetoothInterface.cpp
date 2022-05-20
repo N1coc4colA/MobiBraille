@@ -116,8 +116,8 @@ void BluetoothInterface::receiveData(int dataSize)
   }
 
   //Print the document.
-  if (goOn) {
-    printData();
+  if (goOn && m_trigger != NULL) {
+    m_trigger(dataset, offset+1);
   }
 
   //Cleanup
@@ -133,3 +133,10 @@ void BluetoothInterface::processData()
 {
   receiveData(readInt());
 }
+
+void BluetoothInterface::setTriggers(void (*ptr)(const char *, size_t s))
+{
+  m_trigger = ptr;
+}
+
+
