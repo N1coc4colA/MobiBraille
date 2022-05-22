@@ -47,13 +47,16 @@ class BluetoothInterface
 {
 public:
 	explicit BluetoothInterface(int rx = 11, int tx = 10);
+  ~BluetoothInterface();
 	void processData();
 
   void setTriggers(void (*ptr)(const char *arr, size_t s));
+  void setAbortHandler(void (*f)());
 
 protected:
 	void nullData(char *ptr, size_t s);
 	int readInt();
+  //receiveData MUST be made as a continuous operation, no pause must be done.
 	void receiveData(int dataSize);
 
 private:
@@ -61,6 +64,7 @@ private:
 	int rx;
 	int offset = 0;
 	char *dataset = NULL;
-  void (*m_trigger)(const char *, size_t);
+  void (*m_trigger)(const char *, size_t) = NULL;
+  void (*m_aborted)() = NULL;
 	SoftwareSerial mhc;
 };

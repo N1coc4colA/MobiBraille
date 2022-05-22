@@ -7,6 +7,8 @@ LinePrinter::LinePrinter(int p_p, int p_c)
   ServoCremaillere.attach(pinServoCremaillere);
   ServoPoincons.write(angle_init);
   ServoCremaillere.write(90);
+
+  cleanup();
 }
 
 LinePrinter::~LinePrinter()
@@ -15,21 +17,46 @@ LinePrinter::~LinePrinter()
   ServoCremaillere.detach();
 }
 
-void LinePrinter::printLine(const char *buff, size_t s)
+void LinePrinter::cleanup()
+{
+  c_buff = NULL;
+  c_pos = 0;
+  c_l = 0;
+}
+
+void LinePrinter::processData()
+{
+  if (c_pos < c_l) {
+#ifdef DBG
+    Serial.println(c_buff[c_pos]);
+#endif
+    convert(c_buff[c_pos]);
+    imprimer(colone1, colone2);
+    if (c_pos != (c_l-1)) {
+      deplacementX(SPACE_BETWEEN);
+    }
+    c_pos++;
+  } else {
+    cleanup();
+  }
+}
+
+bool LinePrinter::isAvailable()
+{
+  return c_buff == NULL;
+}
+
+void LinePrinter::printLine(const char *buff, unsigned int beg, size_t s)
 {
 	if (deplacementX == NULL) {
 		return;
 	}
-	int pos = 0;
-	while (pos < s) {
-		Serial.println(buff[pos]);
-		convert(buff[pos]);
-		imprimer(colone1, colone2);
-		if (pos != (s-1)) {
-			deplacementX(SPACE_BETWEEN);
-		}
-		pos++;
-	}
+
+  c_buff = buff;
+  c_pos = beg;
+  c_l = s;
+
+  processData();
 }
 
 void LinePrinter::convert(const char lettre) {

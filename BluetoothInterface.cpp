@@ -5,6 +5,13 @@ BluetoothInterface::BluetoothInterface(int r, int t)
 {
 }
 
+BluetoothInterface::~BluetoothInterface()
+{
+  if (dataset != NULL) {
+    free(dataset);
+  }
+}
+
 void BluetoothInterface::nullData(char *ptr, size_t s)
 {
   int i = 0;
@@ -71,8 +78,10 @@ void BluetoothInterface::receiveData(int dataSize)
     mhc.print("DOS");
   }
 
+#ifdef DBG
   Serial.print("Document size: ");
   Serial.println(dataSize);
+#endif
 
   bool goOn = true;
   int t_offset = 0;
@@ -95,6 +104,9 @@ void BluetoothInterface::receiveData(int dataSize)
         goOn = false;
         //Notify
         mhc.print("ABORTED");
+        if (m_aborted != NULL) {
+          m_aborted();
+        }
       } else {
         dataset[offset] = v;
         offset++;
@@ -123,7 +135,6 @@ void BluetoothInterface::receiveData(int dataSize)
   //Cleanup
   offset = 0;
   if (dataset) {
-    /* [TODO] Print content from here. */
     free(dataset);
     dataset = NULL;
   }
@@ -139,4 +150,7 @@ void BluetoothInterface::setTriggers(void (*ptr)(const char *, size_t s))
   m_trigger = ptr;
 }
 
-
+void BluetoothInterface::setAbortHandler(void (*f)())
+{
+  m_aborted = f;
+}
