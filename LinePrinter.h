@@ -11,11 +11,6 @@ class LinePrinter
 public:
 	explicit LinePrinter(int p_poincons, int p_cremaillere);
 	~LinePrinter();
-
-	void convert(const char lettre);
-	void rotation_servo(int col);
-	void appui_poincon();
-	void imprimer(int c1, int c2);
 	
 	void printLine(const char *ptr, unsigned int beg, size_t len);
 	void setMoveFunc(void (*func)(int));
@@ -25,16 +20,25 @@ public:
 
   void cleanup();
 
+  static double columnToAngle(int column);
+
+protected:
+  void printPart(double angle);
+  void prepareCharacter(char c);
+  void rotate(double angle);
+  void apply();
+  void print(char c);
+
 private:
 	Servo ServoPoincons;
 	Servo ServoCremaillere;
 
-	int pinServoPoincons;
-	int pinServoCremaillere;
+	int pinServoPoincons = 0;
+	int pinServoCremaillere = 0;
 
 	int angle_init = 45;
-	int colone1;
-	int colone2;
+	int column1 = 0;
+	int column2 = 0;
 	int char_limite = 20;
 	int x = 0;
 

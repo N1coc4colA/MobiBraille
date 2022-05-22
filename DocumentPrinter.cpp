@@ -16,7 +16,7 @@ void DocumentPrinter::cleanup()
   set = false;
 }
 
-void DocumentPrinter::setMoveFunction(void (*func)(int))
+void DocumentPrinter::setMoveFunc(void (*func)(int))
 {
   deplacement = func;
 }
@@ -41,16 +41,16 @@ void DocumentPrinter::processData()
       //We preprocess text, this way we can properly split by lines.
       c_p = c_spos;
       bool nobrk = true;
-      while (c_p < l) {
+      while (c_p < c_l) {
         if (c_buff[c_p] == '\n') {
           nobrk = false;
         }
-        p++;
+        c_p++;
       }
       set = true;
-      c_spos += p;
-    } else if (lp->isAvailable) {
-      lp.printLine(c_buff, c_spos, c_p);
+      c_spos += c_p;
+    } else if (lp->isAvailable()) {
+      lp->printLine(c_buff, c_spos, c_p);
     }
   } else {
     cleanup();

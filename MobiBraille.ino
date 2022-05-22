@@ -13,11 +13,19 @@ LinePrinter lp(0, 0);
 DocumentPrinter dp(&lp);
 I2CController ctrlx(0, 0, 0, 0, 0);
 //Add the Y Controller!
+//I2CController ctrly(0, 0, 0, 0, 0;
 
-void deplacement(int v)
+void deplacementX(int v)
 {
   ctrlx.moveByTicks(v);
 }
+
+/*
+void deplacementY(int v)
+{
+  ctrly.moveByTicks(v);
+}
+*/
 
 void printData(const char *d, size_t l)
 {
@@ -41,7 +49,8 @@ void setup()
 
   iface.setTriggers(&printData);
   iface.setAbortHandler(&handleAbort);
-  lp.setMoveFunc(&deplacement);
+  lp.setMoveFunc(&deplacementX);
+  //dp.setMoveFunc(&deplacementY);
 }
 
 void loop()
