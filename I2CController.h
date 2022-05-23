@@ -18,6 +18,10 @@ public:
   int address;
   int motID;
   volatile int pos = 0;
+
+  void moveUntil(bool uw, int v, volatile bool *state);
+  void move(bool upward, int v);
+  void stop();
   
 protected:
 	virtual int convert(int v);

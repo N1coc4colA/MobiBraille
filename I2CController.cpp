@@ -64,5 +64,30 @@ void I2CController::moveByTicks(int ticks, int v)
 #ifdef DBG
   Serial.println(pos);
 #endif
+  stop();
+}
+
+void I2CController::move(bool upward, int v)
+{
+    const int s = convert(upward ? -v : v);
+    if ((0 <= s) && (s < 460)) {
+      Motor.speed(motID, map(s, 0, 460, -100, 0));
+    } else if ((573 < s) && (s <= 1023)) {
+      Motor.speed(motID, map(s, 573, 1023, 0, 100));
+    }
+}
+
+void I2CController::stop()
+{
   Motor.speed(motID, 0);
 }
+
+void I2CController::moveUntil(bool uw, int v, volatile bool *s)
+{
+  while (!(*s)) {
+    move(uw, v);
+  }
+  stop();
+}
+
+

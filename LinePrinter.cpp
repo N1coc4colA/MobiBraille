@@ -30,8 +30,8 @@ void LinePrinter::processData()
 #ifdef DBG
     Serial.println(c_buff[c_pos]);
 #endif
-    convert(c_buff[c_pos]);
-    imprimer(colone1, colone2);
+    prepareCharacter(c_buff[c_pos]);
+    print(c_buff[c_pos]);
     if (c_pos != (c_l-1)) {
       deplacementX(SPACE_BETWEEN);
     }
@@ -59,120 +59,121 @@ void LinePrinter::printLine(const char *buff, unsigned int beg, size_t s)
   processData();
 }
 
-void LinePrinter::convert(const char lettre) {
+void LinePrinter::prepareCharacter(const char lettre) {
   switch (lettre) {
     case 'a':
-      colone1 = 7;
-      colone2 = 4;
+      column1 = 7;
+      column2 = 4;
       break;
     case 'b':
-      colone1 = 5;
-      colone2 = 4;
+      column1 = 5;
+      column2 = 4;
       break;
     case 'c':
-      colone1 = 7;
-      colone2 = 7;
+      column1 = 7;
+      column2 = 7;
       break;
     case 'd':
-      colone1 = 7;
-      colone2 = 5;
+      column1 = 7;
+      column2 = 5;
       break;
     case 'e':
-      colone1 = 7;
-      colone2 = 2;
+      column1 = 7;
+      column2 = 2;
       break;
     case 'f':
-      colone1 = 5;
-      colone2 = 7;
+      column1 = 5;
+      column2 = 7;
       break;
     case 'g':
-      colone1 = 5;
-      colone2 = 5;
+      column1 = 5;
+      column2 = 5;
       break;
     case 'h':
-      colone1 = 5;
-      colone2 = 2;
+      column1 = 5;
+      column2 = 2;
       break;
     case 'i':
-      colone1 = 2;
-      colone2 = 7;
+      column1 = 2;
+      column2 = 7;
       break;
     case 'j':
-      colone1 = 2;
-      colone2 = 5;
+      column1 = 2;
+      column2 = 5;
       break;
     case 'k':
-      colone1 = 8;
-      colone2 = 4;
+      column1 = 8;
+      column2 = 4;
       break;
     case 'l':
-      colone1 = 6;
-      colone2 = 4;
+      column1 = 6;
+      column2 = 4;
       break;
     case 'm':
-      colone1 = 8;
-      colone2 = 7;
+      column1 = 8;
+      column2 = 7;
       break;
     case 'n':
-      colone1 = 8;
-      colone2 = 5;
+      column1 = 8;
+      column2 = 5;
       break;
     case 'o':
-      colone1 = 8;
-      colone2 = 2;
+      column1 = 8;
+      column2 = 2;
       break;
     case 'p':
-      colone1 = 6;
-      colone2 = 7;
+      column1 = 6;
+      column2 = 7;
       break;
     case 'q':
-      colone1 = 6;
-      colone2 = 5;
+      column1 = 6;
+      column2 = 5;
       break;
     case 'r':
-      colone1 = 6;
-      colone2 = 2;
+      column1 = 6;
+      column2 = 2;
       break;
     case 's':
-      colone1 = 1;
-      colone2 = 7;
+      column1 = 1;
+      column2 = 7;
       break;
     case 't':
-      colone1 = 1;
-      colone2 = 5;
+      column1 = 1;
+      column2 = 5;
       break;
     case 'u':
-      colone1 = 8;
-      colone2 = 3;
+      column1 = 8;
+      column2 = 3;
       break;
     case 'v':
-      colone1 = 6;
-      colone2 = 3;
+      column1 = 6;
+      column2 = 3;
       break;
     case 'w':
-      colone1 = 2;
-      colone2 = 6;
+      column1 = 2;
+      column2 = 6;
       break;
     case 'x':
-      colone1 = 8;
-      colone2 = 8;
+      column1 = 8;
+      column2 = 8;
       break;
     case 'y':
-      colone1 = 8;
-      colone2 = 6;
+      column1 = 8;
+      column2 = 6;
       break;
     case 'z':
-      colone1 = 8;
-      colone2 = 1;
+      column1 = 8;
+      column2 = 1;
       break;
     case ' ':
-      colone1 = 4;
-      colone2 = 4;
+      column1 = 4;
+      column2 = 4;
       break;
   }
 }
 
-void LinePrinter::rotation_servo(int colone) {
+double LinePrinter::columnToAngle(int colone)
+{
   double angle = 0;
   switch (colone) {
     case 0:
@@ -207,27 +208,36 @@ void LinePrinter::rotation_servo(int colone) {
       angle = 74.25;
       break;
   }
-  ServoPoincons.write(angle);
-  delay(10);
+  return angle;
 }
 
-void LinePrinter::appui_poincon(){
+void LinePrinter::apply(){
   ServoCremaillere.write(45);
   delay(80);
   ServoCremaillere.write(90);
   delay(25);
 }
 
-void LinePrinter::imprimer(int C1, int C2)
+void LinePrinter::rotate(double angle)
 {
-	if (deplacementX == NULL) {
-		return;
-	}
-	rotation_servo(C1);
-	appui_poincon();
-	deplacementX(SPACE_INBETWEEN);
-	rotation_servo(C2);
-	appui_poincon();
+  ServoPoincons.write(angle);
+  delay(10);
+}
+
+void LinePrinter::printPart(double angle)
+{
+  rotate(angle);
+  apply();
+}
+
+void LinePrinter::print(char c)
+{
+ if (deplacementX == NULL) {
+    return;
+  }
+  printPart(columnToAngle(column1));
+  deplacementX(SPACE_INBETWEEN);
+  printPart(columnToAngle(column2));
 }
 
 void LinePrinter::setMoveFunc(void (*func)(int))

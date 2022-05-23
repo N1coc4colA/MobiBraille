@@ -8,6 +8,8 @@
 #define BI_TX 10
 #define BI_RX 11
 
+volatile bool n_state = false;
+
 BluetoothInterface iface(0, 0);
 LinePrinter lp(0, 0);
 DocumentPrinter dp(&lp);
@@ -38,6 +40,14 @@ void handleAbort()
   lp.cleanup();
 }
 
+void reset()
+{
+  n_state = 0;
+  ctrlx.moveUntil(false, 200, &n_state);
+  ctrlx.moveUntil(false, 150, &n_state);
+  ctrlx.reset();
+}
+
 void setup()
 {
   Serial.begin(250000);
@@ -51,6 +61,8 @@ void setup()
   iface.setAbortHandler(&handleAbort);
   lp.setMoveFunc(&deplacementX);
   //dp.setMoveFunc(&deplacementY);
+
+  reset();
 }
 
 void loop()
