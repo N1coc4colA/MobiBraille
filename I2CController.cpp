@@ -1,28 +1,53 @@
 #include "I2CController.h"
 
-I2CController *m_ptr = NULL;
+I2CController *m_ptr1 = NULL;
+I2CController *m_ptr2 = NULL;
 
-void hiddenISR()
+void hiddenISR1()
 {
-  if (m_ptr == NULL) {
+  if (m_ptr1 == NULL) {
     return;
   }
-  m_ptr->pos += (digitalRead(m_ptr->pA) == digitalRead(m_ptr->pB) ? 1 : -1);
+  m_ptr1->pos += (digitalRead(m_ptr1->pA) == digitalRead(m_ptr1->pB) ? 1 : -1);
 #ifdef DBG
-  Serial.println(m_ptr->pos);
+  Serial.println(m_ptr1->pos);
+#endif
+}
+
+void hiddenISR2()
+{
+  if (m_ptr2 == NULL) {
+    return;
+  }
+  m_ptr2->pos += (digitalRead(m_ptr2->pA) == digitalRead(m_ptr2->pB) ? 1 : -1);
+#ifdef DBG
+  Serial.println(m_ptr2->pos);
 #endif
 }
 
 I2CController::I2CController(int c, int a, int b, int addr, int mid)
 	: a0(c), pA(a), pB(b), address(addr), motID(mid)
 {
+#ifdef DBG
+  Serial.println("Setting up I2C Motor driver...");
+#endif
   Motor.begin(address);
+
+#ifdef DBG
+  Serial.println("I2C Motor driver setup.");
+#endif
 
   pinMode(a0, INPUT);
   pinMode(pA, INPUT);
   pinMode(pB, INPUT);
-  attachInterrupt(digitalPinToInterrupt(a0), hiddenISR, CHANGE);
-  
+  if (mid == 1) {
+    attachInterrupt(digitalPinToInterrupt(a0), hiddenISR1, CHANGE);
+    m_ptr1 = this;
+  } else {
+    attachInterrupt(digitalPinToInterrupt(a0), hiddenISR2, CHANGE);
+    m_ptr2 = this;
+  }
+
 #ifdef DBG
   Serial.println("Codeur incremental");
 #endif
@@ -30,13 +55,15 @@ I2CController::I2CController(int c, int a, int b, int addr, int mid)
   //Ensure it is off!
   reset();
   Motor.speed(motID, 0);
-
-  m_ptr = this;
 }
 
 I2CController::~I2CController()
 {
-  m_ptr = NULL;
+   if (motID == 1) {
+      m_ptr1 = NULL;
+   } else {
+      m_ptr2 = NULL;
+   }
   detachInterrupt(digitalPinToInterrupt(a0));
 }
 
@@ -82,12 +109,17 @@ void I2CController::stop()
   Motor.speed(motID, 0);
 }
 
-void I2CController::moveUntil(bool uw, int v, volatile bool *s)
+void I2CController::moveUntil(bool uw, int v, bool (*func)())
 {
-  while (!(*s)) {
+#ifdef DBG
+  Serial.println("MoveUntil called.");
+#endif
+  while (!func()) {
     move(uw, v);
   }
+#ifdef DBG
+  Serial.println("Ended.");
+#endif
   stop();
 }
-
 

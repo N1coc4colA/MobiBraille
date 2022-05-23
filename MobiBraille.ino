@@ -7,27 +7,28 @@
 #define LP_P 9
 #define BI_TX 10
 #define BI_RX 11
-
-volatile bool n_state = false;
+#define FC_P 5
 
 BluetoothInterface iface(0, 0);
 LinePrinter lp(0, 0);
 DocumentPrinter dp(&lp);
-I2CController ctrlx(0, 0, 0, 0, 0);
-//Add the Y Controller!
-//I2CController ctrly(0, 0, 0, 0, 0;
+I2CController *ctrlx = NULL;
+I2CController *ctrly = NULL;
+
+bool readState()
+{
+  return bool(digitalRead(FC_P));
+}
 
 void deplacementX(int v)
 {
-  ctrlx.moveByTicks(v);
+  ctrlx->moveByTicks(v);
 }
 
-/*
 void deplacementY(int v)
 {
-  ctrly.moveByTicks(v);
+  ctrly->moveByTicks(v);
 }
-*/
 
 void printData(const char *d, size_t l)
 {
@@ -40,29 +41,43 @@ void handleAbort()
   lp.cleanup();
 }
 
-void reset()
+void resetPos()
 {
-  n_state = 0;
-  ctrlx.moveUntil(false, 200, &n_state);
-  ctrlx.moveUntil(false, 150, &n_state);
-  ctrlx.reset();
+  Serial.println("b");
+  ctrlx->moveUntil(false, 200, &readState);
+  ctrlx->moveUntil(false, 150, &readState);
+  ctrlx->reset();
 }
 
 void setup()
 {
   Serial.begin(250000);
+#ifdef DBG
+  Serial.println("MobiBraille starting...");
+#endif
+
+  if (ctrlx != NULL) {
+    delete ctrlx;
+  }
+  if (ctrly != NULL) {
+    delete ctrly;
+  }
+
   iface = BluetoothInterface(BI_RX, BI_TX);
   lp = LinePrinter(LP_P, LP_C);
   dp = DocumentPrinter(&lp);
-  ctrlx = I2CController(A0, 2, 3, 0x0f, 1);
-  //ctrly = I2CController(, , , , );
+  ctrlx = new I2CController(A0, 2, 3, 0x0f, 1);
+  //ctrly = I2CController(A1, 4, 5, 0x0f, 2); //[TODO] Add the pins PLZ
 
   iface.setTriggers(&printData);
   iface.setAbortHandler(&handleAbort);
   lp.setMoveFunc(&deplacementX);
-  //dp.setMoveFunc(&deplacementY);
+  dp.setMoveFunc(&deplacementY);
 
-  reset();
+  resetPos();
+#ifdef DBG
+  Serial.println("MobiBraille started.");
+#endif
 }
 
 void loop()

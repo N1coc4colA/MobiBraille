@@ -177,35 +177,35 @@ double LinePrinter::columnToAngle(int colone)
   double angle = 0;
   switch (colone) {
     case 0:
-      angle = 7.05;
+      angle = 4.95;
       break;
 
     case 1:
-      angle = 21.15;
+      angle = 14.85;
       break;
 
     case 2:
-      angle = 35.25;
+      angle = 24.75;
       break;
 
     case 3:
-      angle = 49.35;
+      angle = 34.65;
       break;
 
     case 4:
-      angle = 63.45;
+      angle = 44.55;
       break;
 
     case 5:
-      angle = 77.55;
+      angle = 54.45;
       break;
 
     case 6:
-      angle = 91.65;
+      angle = 64.35;
       break;
 
     case 7:
-      angle = 105.75;
+      angle = 74.25;
       break;
   }
   return angle;

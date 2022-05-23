@@ -3,6 +3,8 @@
 #include <Arduino.h>
 #include "Grove_I2C_Motor_Driver.h"
 
+//#define DBG
+
 class I2CController
 {
 public:
@@ -19,7 +21,7 @@ public:
   int motID;
   volatile int pos = 0;
 
-  void moveUntil(bool uw, int v, volatile bool *state);
+  void moveUntil(bool uw, int v, bool (*state)());
   void move(bool upward, int v);
   void stop();
   
