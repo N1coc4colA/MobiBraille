@@ -174,41 +174,25 @@ void LinePrinter::prepareCharacter(const char lettre) {
 
 double LinePrinter::columnToAngle(int colone)
 {
-  double angle = 0;
   switch (colone) {
     case 0:
-      angle = 4.95;
-      break;
-
+      return 4.95;
     case 1:
-      angle = 14.85;
-      break;
-
+      return 14.85;
     case 2:
-      angle = 24.75;
-      break;
-
+      return 24.75;
     case 3:
-      angle = 34.65;
-      break;
-
+      return 34.65;
     case 4:
-      angle = 44.55;
-      break;
-
+      return 44.55;
     case 5:
-      angle = 54.45;
-      break;
-
+      return 54.45;
     case 6:
-      angle = 64.35;
-      break;
-
+      return 64.35;
     case 7:
-      angle = 74.25;
-      break;
+      return 74.25;
   }
-  return angle;
+  return 0;
 }
 
 void LinePrinter::apply(){
