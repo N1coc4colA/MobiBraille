@@ -56,3 +56,9 @@ void DocumentPrinter::processData()
     cleanup();
   }
 }
+
+bool DocumentPrinter::isBusy()
+{
+  return c_buff != NULL;
+}
+

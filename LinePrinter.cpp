@@ -28,6 +28,7 @@ void LinePrinter::processData()
 {
   if (c_pos < c_l) {
 #ifdef DBG
+    Serial.print("Printing: ");
     Serial.println(c_buff[c_pos]);
 #endif
     prepareCharacter(c_buff[c_pos]);
@@ -176,21 +177,21 @@ double LinePrinter::columnToAngle(int colone)
 {
   switch (colone) {
     case 0:
-      return 7.05;
+      return 4.95;
     case 1:
-      return 21.15;
+      return 14.85;
     case 2:
-      return 35.25;
+      return 24.75;
     case 3:
-      return 49.35;
+      return 34.65;
     case 4:
-      return 63.45;
+      return 44.55;
     case 5:
-      return 77.55;
+      return 54.45;
     case 6:
-      return 91.65;
+      return 64.35;
     case 7:
-      return 105.75;
+      return 74.25;
   }
   return 0;
 }

@@ -15,6 +15,8 @@ public:
 
   void cleanup();
 
+  bool isBusy();
+
 private:
   LinePrinter *lp;
 

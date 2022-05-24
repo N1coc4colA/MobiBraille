@@ -8,6 +8,8 @@
 #define READING_DELAY 100
 #define DATA_SIZE_LIMIT 2048
 
+#define DBG
+
 /*
  * PROTOCOL SYSTEM:
  * 
@@ -20,8 +22,8 @@
  * 
  * MESSAGING SYSTEM ON:
  * ? : RDY   : ReaDY to print
- * [ : DSRB  : Data Size Read Begun
- * ] : DSRE  : Data Size Read Ended
+ * < : DSRB  : Data Size Read Begun
+ * > : DSRE  : Data Size Read Ended
  * % : ABORT : operation ABORTed
  * ? : WOS   : Write Operation Succeed
  * ? : WOF   : Write Operation Failed
@@ -52,6 +54,7 @@ public:
 
   void setTriggers(void (*ptr)(const char *arr, size_t s));
   void setAbortHandler(void (*f)());
+  void setBusyCallback(bool (*ptr)());
 
 protected:
 	void nullData(char *ptr, size_t s);
@@ -66,5 +69,6 @@ private:
 	char *dataset = NULL;
   void (*m_trigger)(const char *, size_t) = NULL;
   void (*m_aborted)() = NULL;
-	SoftwareSerial mhc;
+  bool (*bstate)() = NULL;
+	SoftwareSerial *mhc = NULL;
 };
