@@ -56,8 +56,6 @@ void LinePrinter::printLine(const char *buff, unsigned int beg, size_t s)
   c_buff = buff;
   c_pos = beg;
   c_l = s;
-
-  processData();
 }
 
 void LinePrinter::prepareCharacter(const char lettre) {

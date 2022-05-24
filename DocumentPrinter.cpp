@@ -36,7 +36,7 @@ void DocumentPrinter::processData()
     return;
   }
 
-  if (c_spos < ((unsigned int)c_l)) {
+  if (c_spos < c_l) {
     if (!set) {
       Serial.println("Prepared data.");
       //We preprocess text, this way we can properly split by lines.
@@ -48,14 +48,15 @@ void DocumentPrinter::processData()
         }
         c_p++;
       }
+      //c_spos += c_p;
       set = true;
-      c_spos += c_p;
     } else if (lp->isAvailable()) {
       Serial.print(c_spos);
       Serial.print(" - ");
       Serial.println(c_p);
       lp->printLine(c_buff, c_spos, c_p);
       set = false;
+      c_spos += c_p;
     } else {
       Serial.println("Line printer not available!");
     }
@@ -68,4 +69,3 @@ bool DocumentPrinter::isBusy()
 {
   return c_buff != NULL;
 }
-
