@@ -39,6 +39,7 @@ int BluetoothInterface::readInt()
     delay(LOOP_DELAY);
     char current = mhc->read();
     bool acceptValue = true;
+    Serial.println(current);
 
     //Check input
     switch (current) {
@@ -160,6 +161,8 @@ void BluetoothInterface::processData()
 {
   if (bstate != NULL && !bstate()) {
     receiveData(readInt());
+  } else {
+    Serial.println("Already busy!");
   }
 }
 

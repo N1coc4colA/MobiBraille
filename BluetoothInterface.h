@@ -47,7 +47,7 @@
  * CLI <-- WOS -- MHC
  *  [Printing ended]
  */
- 
+
 class BluetoothInterface
 {
 public:
