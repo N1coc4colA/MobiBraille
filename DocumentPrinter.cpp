@@ -23,8 +23,6 @@ void DocumentPrinter::setMoveFunc(void (*func)(int))
 
 void DocumentPrinter::printDocument(const char *buff, size_t s)
 {
-  Serial.println("Data to print:");
-  Serial.println(buff);
   c_buff = buff;
   c_l = s;
   c_spos = 0;
@@ -38,8 +36,9 @@ void DocumentPrinter::processData()
     return;
   }
 
-  if (c_spos < c_l) {
+  if (c_spos < ((unsigned int)c_l)) {
     if (!set) {
+      Serial.println("Prepared data.");
       //We preprocess text, this way we can properly split by lines.
       c_p = c_spos;
       bool nobrk = true;
@@ -52,7 +51,13 @@ void DocumentPrinter::processData()
       set = true;
       c_spos += c_p;
     } else if (lp->isAvailable()) {
+      Serial.print(c_spos);
+      Serial.print(" - ");
+      Serial.println(c_p);
       lp->printLine(c_buff, c_spos, c_p);
+      set = false;
+    } else {
+      Serial.println("Line printer not available!");
     }
   } else {
     cleanup();

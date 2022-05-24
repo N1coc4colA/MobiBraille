@@ -26,17 +26,18 @@ bool readState()
 
 void deplacementX(int v)
 {
+  Serial.println(v);
   ctrlx->moveByTicks(v);
 }
 
 void deplacementY(int v)
 {
+  Serial.println(v);
   ctrly->moveByTicks(v);
 }
 
 void printData(const char *d, size_t l)
 {
-  Serial.println("Reached");
   dp->printDocument(d, l);
 }
 
@@ -56,8 +57,8 @@ void resetPos()
 #ifdef DBG
   Serial.println("Reseting pos...");
 #endif
-  ctrlx->moveUntil(false, 200, &readState);
-  ctrlx->moveUntil(false, 150, &readState);
+  ctrlx->moveUntil(true, 200, &readState);
+  ctrlx->moveUntil(true, 150, &readState);
   ctrlx->reset();
 }
 
@@ -100,10 +101,6 @@ void setup()
   ctrlx = new I2CController(A0, 2, 3, I2C_ADDRESS, MOTOR1);
   ctrly = new I2CController(A1, 4, 5, I2C_ADDRESS, MOTOR2);
 
-#ifdef DBG
-  Serial.println("MobiBraille started.");
-#endif
-
   iface->setTriggers(&printData);
   iface->setAbortHandler(&handleAbort);
   iface->setBusyCallback(&documentState);
@@ -122,4 +119,5 @@ void loop()
   iface->processData();
   dp->processData();
   lp->processData();
+  Serial.print("-");
 }
