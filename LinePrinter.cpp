@@ -192,7 +192,7 @@ double LinePrinter::columnToAngle(int colone)
     case 6:
       return 91.65;
     case 7:
-      return 105.7
+      return 105.7;
   }
   return 0;
 }
