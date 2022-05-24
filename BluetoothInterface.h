@@ -21,6 +21,7 @@
  * -> TEXT2 is not printed.
  * 
  * MESSAGING SYSTEM ON:
+ * | : 1/0   : The busy state of the printer, 1 is busy, 0 is free
  * ? : RDY   : ReaDY to print
  * < : DSRB  : Data Size Read Begun
  * > : DSRE  : Data Size Read Ended
@@ -33,6 +34,8 @@
  * MESSAGING EXAMPLE:
  * [Connecting to MHC]
  * CLI <- CONN -- MHC
+ * CLI -- "|" --> MHC
+ * CLI <--- 0 --- MHC
  * CLI -- "<" --> MHC
  * CLI <- DSRB -- MHC
  * CLI -- ... --> MHC
