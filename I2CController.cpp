@@ -1,28 +1,28 @@
 #include "I2CController.h"
 
-I2CController *m_ptr1 = NULL;
-I2CController *m_ptr2 = NULL;
+static I2CController *m_ptr1 = NULL;
+static I2CController *m_ptr2 = NULL;
 
 void hiddenISR1()
 {
+  #ifdef DBG
+  Serial.println(m_ptr1->pos);
+#endif
   if (m_ptr1 == NULL) {
     return;
   }
   m_ptr1->pos += (digitalRead(m_ptr1->pA) == digitalRead(m_ptr1->pB) ? 1 : -1);
-#ifdef DBG
-  Serial.println(m_ptr1->pos);
-#endif
 }
 
 void hiddenISR2()
 {
+#ifdef DBG
+  Serial.println(m_ptr2->pos);
+#endif
   if (m_ptr2 == NULL) {
     return;
   }
   m_ptr2->pos += (digitalRead(m_ptr2->pA) == digitalRead(m_ptr2->pB) ? 1 : -1);
-#ifdef DBG
-  Serial.println(m_ptr2->pos);
-#endif
 }
 
 I2CController::I2CController(int c, int a, int b, int addr, int mid)
@@ -31,11 +31,13 @@ I2CController::I2CController(int c, int a, int b, int addr, int mid)
   pinMode(a0, INPUT);
   pinMode(pA, INPUT);
   pinMode(pB, INPUT);
-  if (mid == 1) {
-    attachInterrupt(digitalPinToInterrupt(a0), hiddenISR1, CHANGE);
+  if (mid == MOTOR1) {
+    Serial.println(a0);
+    attachInterrupt(a0, hiddenISR1, CHANGE);
     m_ptr1 = this;
   } else {
-    attachInterrupt(digitalPinToInterrupt(a0), hiddenISR2, CHANGE);
+    Serial.println(a0);
+    attachInterrupt(a0, hiddenISR2, CHANGE);
     m_ptr2 = this;
   }
 
@@ -55,17 +57,37 @@ I2CController::~I2CController()
    } else {
       m_ptr2 = NULL;
    }
-  detachInterrupt(digitalPinToInterrupt(a0));
+  detachInterrupt(a0);
 }
 
 void I2CController::reset()
 {
+#ifdef DBG
+  Serial.println("Position reset");
+#endif
 	pos = 0;
 }
 
 int I2CController::convert(int v)
 {
 	return v + 511;
+}
+
+void I2CController::precise(int nv, int s)
+{
+    while (nv != pos) {
+        Motor.speed(motID, (pos < nv ? -s : s));
+    }
+    stop();
+
+  //Make it more precise with a correction
+  unsigned long source = millis();
+  while ((millis() - source) < 10) {
+  }
+  
+   if (pos != nv) {
+      precise(nv, 90);
+   }
 }
 
 void I2CController::moveByTicks(int ticks, int v)
@@ -79,10 +101,9 @@ void I2CController::moveByTicks(int ticks, int v)
       Motor.speed(motID, map(s, 573, 1023, 0, 100));
     }
   }
-#ifdef DBG
-  Serial.println(pos);
-#endif
   stop();
+
+  precise(nv, 90);
 }
 
 void I2CController::move(bool upward, int v)

@@ -15,6 +15,7 @@ public:
 	
 	void printLine(const char *ptr, unsigned int beg, size_t len);
 	void setMoveFunc(void (*func)(int));
+  void setGotoOrigin(void (*func)());
   
   void processData();
   bool isAvailable();
@@ -44,6 +45,7 @@ private:
 	int x = 0;
 
 	void (*deplacementX)(int v) = NULL;
+  void (*gotoOrigin)() = NULL;
 
   //Currently running task
   const char *c_buff = NULL;
