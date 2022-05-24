@@ -26,14 +26,43 @@ bool readState()
 
 void deplacementX(int v)
 {
+  Serial.print("X");
   Serial.println(v);
   ctrlx->moveByTicks(v);
 }
 
 void deplacementY(int v)
 {
+  Serial.print("Y");
   Serial.println(v);
   ctrly->moveByTicks(v);
+}
+
+void resetPos()
+{
+#ifdef DBG
+  Serial.println("Reseting pos...");
+#endif
+  ctrlx->moveUntil(true, 100, &readState);
+
+  //We need a minimum delay to ensure it is alright.
+  unsigned long source = millis();
+  while ((millis() - source) < 20) {
+  }
+
+  if (!readState()) {
+    resetPos();
+  } else {
+    if (ctrlx->pos > 0) {
+      ctrlx->moveUntil(true, 80, &readState);
+    }
+    ctrlx->reset();
+  }
+}
+
+void moveToOrigin()
+{
+  resetPos();
 }
 
 void printData(const char *d, size_t l)
@@ -49,17 +78,7 @@ void handleAbort()
 
 bool documentState()
 {
-  dp->isBusy();
-}
-
-void resetPos()
-{
-#ifdef DBG
-  Serial.println("Reseting pos...");
-#endif
-  ctrlx->moveUntil(true, 200, &readState);
-  ctrlx->moveUntil(true, 150, &readState);
-  ctrlx->reset();
+  return false; //dp->isBusy();
 }
 
 void setup()
@@ -88,9 +107,7 @@ void setup()
 #ifdef DBG
   Serial.println("Setting up I2C Motor driver...");
 #endif
-
   Motor.begin(I2C_ADDRESS);
-  
 #ifdef DBG
   Serial.println("I2C Motor driver setup.");
 #endif
@@ -98,13 +115,14 @@ void setup()
   iface = new BluetoothInterface(BI_RX, BI_TX);
   lp = new LinePrinter(LP_P, LP_C);
   dp = new DocumentPrinter(lp);
-  ctrlx = new I2CController(A0, 2, 3, I2C_ADDRESS, MOTOR1);
+  ctrlx = new I2CController(0, 2, 3, I2C_ADDRESS, MOTOR1);
   ctrly = new I2CController(A1, 4, 5, I2C_ADDRESS, MOTOR2);
 
   iface->setTriggers(&printData);
   iface->setAbortHandler(&handleAbort);
   iface->setBusyCallback(&documentState);
   lp->setMoveFunc(&deplacementX);
+  lp->setGotoOrigin(&moveToOrigin);
   dp->setMoveFunc(&deplacementY);
 
   resetPos();
@@ -119,5 +137,4 @@ void loop()
   iface->processData();
   dp->processData();
   lp->processData();
-  Serial.print("-");
 }
