@@ -75,6 +75,7 @@ int I2CController::convert(int v)
 
 void I2CController::precise(int nv, int s)
 {
+  Serial.println("precise");
     while (nv != pos) {
         Motor.speed(motID, (pos < nv ? -s : s));
     }
@@ -86,7 +87,7 @@ void I2CController::precise(int nv, int s)
   }
   
    if (pos != nv) {
-      precise(nv, 90);
+      precise(nv, s);
    }
 }
 
@@ -103,7 +104,7 @@ void I2CController::moveByTicks(int ticks, int v)
   }
   stop();
 
-  precise(nv, 90);
+  precise(nv, 10);
 }
 
 void I2CController::move(bool upward, int v)

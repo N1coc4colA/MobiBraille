@@ -12,7 +12,7 @@ public:
   explicit DocumentPrinter(LinePrinter *lp = NULL);
 
   void setMoveFunc(void (*func)(int));
-  void printDocument(const char *buff, size_t s);
+  void printDocument(char *buff, size_t s);
   void processData();
 
   void cleanup();
@@ -22,10 +22,10 @@ public:
 private:
   LinePrinter *lp;
 
-  const char *c_buff = NULL;
+  char *c_buff = NULL;
   size_t c_l = 0;
-  unsigned int c_spos = 0;
-  unsigned int c_p = 0;
+  int c_spos = 0;
+  int c_p = 0;
   bool set = false;
 
   void (*deplacement)(int) = NULL;

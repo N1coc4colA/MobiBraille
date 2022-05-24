@@ -55,7 +55,7 @@ public:
   ~BluetoothInterface();
 	void processData();
 
-  void setTriggers(void (*ptr)(const char *arr, size_t s));
+  void setTriggers(void (*ptr)(char *arr, size_t s));
   void setAbortHandler(void (*f)());
   void setBusyCallback(bool (*ptr)());
 
@@ -70,7 +70,7 @@ private:
 	int rx;
 	int offset = 0;
 	char *dataset = NULL;
-  void (*m_trigger)(const char *, size_t) = NULL;
+  void (*m_trigger)(char *, size_t) = NULL;
   void (*m_aborted)() = NULL;
   bool (*bstate)() = NULL;
 	SoftwareSerial *mhc = NULL;

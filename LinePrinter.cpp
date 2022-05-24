@@ -27,12 +27,17 @@ void LinePrinter::cleanup()
 void LinePrinter::processData()
 {
   if (c_pos < c_l) {
+    if (c_buff[c_pos] == '\n' || c_buff[c_pos] == '\0') {
+      if (c_pos == c_l) {
+        return;
+      }
+      c_pos++;
+    }
 #ifdef DBG
     Serial.print("Printing: ");
     Serial.println(c_buff[c_pos]);
 #endif
     prepareCharacter(c_buff[c_pos]);
-    print(c_buff[c_pos]);
     if (c_pos != (c_l-1)) {
       deplacementX(SPACE_BETWEEN);
     }
@@ -50,11 +55,19 @@ bool LinePrinter::isAvailable()
   return c_buff == NULL;
 }
 
-void LinePrinter::printLine(const char *buff, unsigned int beg, size_t s)
+void LinePrinter::printLine(char *buff, int beg, size_t s)
 {
 	if (deplacementX == NULL) {
 		return;
 	}
+
+ Serial.print("Printing line: ");
+ 
+      int i = beg;
+      while (i < s) {
+        Serial.print(buff[i]);
+        i++;
+      }
 
   c_buff = buff;
   c_pos = beg;
@@ -198,7 +211,7 @@ double LinePrinter::columnToAngle(int colone)
 }
 
 void LinePrinter::apply(){
-  ServoCremaillere.write(33);
+  ServoCremaillere.write(95);
   delay(80);
   ServoCremaillere.write(0);
   delay(25);

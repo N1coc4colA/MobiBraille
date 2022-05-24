@@ -26,8 +26,6 @@ bool readState()
 
 void deplacementX(int v)
 {
-  Serial.print("X");
-  Serial.println(v);
   ctrlx->moveByTicks(v);
 }
 
@@ -43,7 +41,7 @@ void resetPos()
 #ifdef DBG
   Serial.println("Reseting pos...");
 #endif
-  ctrlx->moveUntil(true, 100, &readState);
+  ctrlx->moveUntil(true, 150, &readState);
 
   //We need a minimum delay to ensure it is alright.
   unsigned long source = millis();
@@ -65,8 +63,9 @@ void moveToOrigin()
   resetPos();
 }
 
-void printData(const char *d, size_t l)
+void printData(char *d, size_t l)
 {
+ Serial.println(d);
   dp->printDocument(d, l);
 }
 
@@ -86,6 +85,7 @@ void setup()
   Serial.begin(250000);
 #ifdef DBG
   Serial.println("MobiBraille starting...");
+  Serial.println('{');
 #endif
 
   if (ctrlx != NULL) {

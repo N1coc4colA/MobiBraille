@@ -21,7 +21,7 @@ void DocumentPrinter::setMoveFunc(void (*func)(int))
   deplacement = func;
 }
 
-void DocumentPrinter::printDocument(const char *buff, size_t s)
+void DocumentPrinter::printDocument(char *buff, size_t s)
 {
   c_buff = buff;
   c_l = s;
@@ -35,6 +35,7 @@ void DocumentPrinter::processData()
   if (c_buff == NULL || lp == NULL || deplacement == NULL) {
     return;
   }
+  Serial.println(c_buff);
 
   if (c_spos < c_l) {
     if (!set) {

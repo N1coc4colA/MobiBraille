@@ -13,10 +13,10 @@ public:
 	explicit LinePrinter(int p_poincons, int p_cremaillere);
 	~LinePrinter();
 	
-	void printLine(const char *ptr, unsigned int beg, size_t len);
+	void printLine(char *ptr, int beg, size_t len);
 	void setMoveFunc(void (*func)(int));
   void setGotoOrigin(void (*func)());
-  
+
   void processData();
   bool isAvailable();
 
@@ -48,7 +48,7 @@ private:
   void (*gotoOrigin)() = NULL;
 
   //Currently running task
-  const char *c_buff = NULL;
-  unsigned int c_pos = 0;
+  char *c_buff = NULL;
+  int c_pos = 0;
   size_t c_l = 0;
 };

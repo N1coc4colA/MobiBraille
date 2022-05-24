@@ -166,7 +166,7 @@ void BluetoothInterface::processData()
   }
 }
 
-void BluetoothInterface::setTriggers(void (*ptr)(const char *, size_t s))
+void BluetoothInterface::setTriggers(void (*ptr)(char *, size_t s))
 {
   m_trigger = ptr;
 }
