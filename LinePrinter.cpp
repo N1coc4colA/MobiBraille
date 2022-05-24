@@ -38,6 +38,9 @@ void LinePrinter::processData()
     }
     c_pos++;
   } else {
+    if (c_buff != NULL && gotoOrigin != NULL) {
+      gotoOrigin();
+    }
     cleanup();
   }
 }
@@ -227,3 +230,9 @@ void LinePrinter::setMoveFunc(void (*func)(int))
 {
 	deplacementX = func;
 }
+
+void LinePrinter::setGotoOrigin(void (*f)())
+{
+  gotoOrigin = f;
+}
+
