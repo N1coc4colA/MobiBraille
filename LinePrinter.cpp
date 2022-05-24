@@ -195,9 +195,9 @@ double LinePrinter::columnToAngle(int colone)
 }
 
 void LinePrinter::apply(){
-  ServoCremaillere.write(45);
+  ServoCremaillere.write(33);
   delay(80);
-  ServoCremaillere.write(90);
+  ServoCremaillere.write(0);
   delay(25);
 }
 
