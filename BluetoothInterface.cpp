@@ -144,6 +144,7 @@ void BluetoothInterface::receiveData(int dataSize)
 
   //Print the document.
   if (goOn && m_trigger != NULL) {
+    Serial.println("Ended reading data.");
     m_trigger(dataset, offset+1);
   }
 

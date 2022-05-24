@@ -2,6 +2,8 @@
 
 #include <Arduino.h>
 
+#define DBG
+
 class LinePrinter;
 
 class DocumentPrinter

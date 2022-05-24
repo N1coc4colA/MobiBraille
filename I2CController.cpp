@@ -28,15 +28,6 @@ void hiddenISR2()
 I2CController::I2CController(int c, int a, int b, int addr, int mid)
 	: a0(c), pA(a), pB(b), address(addr), motID(mid)
 {
-#ifdef DBG
-  Serial.println("Setting up I2C Motor driver...");
-#endif
-  Motor.begin(address);
-
-#ifdef DBG
-  Serial.println("I2C Motor driver setup.");
-#endif
-
   pinMode(a0, INPUT);
   pinMode(pA, INPUT);
   pinMode(pB, INPUT);

@@ -2,12 +2,14 @@
 #include "BluetoothInterface.h"
 #include "LinePrinter.h"
 #include "DocumentPrinter.h"
+#include "Grove_I2C_Motor_Driver.h"
 
 #define LP_C 8
 #define LP_P 9
 #define BI_RX 10
 #define BI_TX 11
 #define FC_P 5
+#define I2C_ADDRESS 0x0f
 
 #define DBG
 
@@ -29,12 +31,12 @@ void deplacementX(int v)
 
 void deplacementY(int v)
 {
-  //ctrly->moveByTicks(v);
+  ctrly->moveByTicks(v);
 }
 
 void printData(const char *d, size_t l)
 {
-  Serial.println(d);
+  Serial.println("Reached");
   dp->printDocument(d, l);
 }
 
@@ -46,11 +48,14 @@ void handleAbort()
 
 bool documentState()
 {
-  return false; //dp->isBusy();
+  dp->isBusy();
 }
 
 void resetPos()
 {
+#ifdef DBG
+  Serial.println("Reseting pos...");
+#endif
   ctrlx->moveUntil(false, 200, &readState);
   ctrlx->moveUntil(false, 150, &readState);
   ctrlx->reset();
@@ -58,7 +63,7 @@ void resetPos()
 
 void setup()
 {
-  Serial.begin(9600);
+  Serial.begin(250000);
 #ifdef DBG
   Serial.println("MobiBraille starting...");
 #endif
@@ -79,11 +84,25 @@ void setup()
     delete lp;
   }
 
+#ifdef DBG
+  Serial.println("Setting up I2C Motor driver...");
+#endif
+
+  Motor.begin(I2C_ADDRESS);
+  
+#ifdef DBG
+  Serial.println("I2C Motor driver setup.");
+#endif
+
   iface = new BluetoothInterface(BI_RX, BI_TX);
   lp = new LinePrinter(LP_P, LP_C);
   dp = new DocumentPrinter(lp);
-  ctrlx = new I2CController(A0, 2, 3, 0x0f, 1);
-  //ctrly = I2CController(A1, 4, 5, 0x0f, 2); //[TODO] Add the pins PLZ*/
+  ctrlx = new I2CController(A0, 2, 3, I2C_ADDRESS, MOTOR1);
+  ctrly = new I2CController(A1, 4, 5, I2C_ADDRESS, MOTOR2);
+
+#ifdef DBG
+  Serial.println("MobiBraille started.");
+#endif
 
   iface->setTriggers(&printData);
   iface->setAbortHandler(&handleAbort);
@@ -91,7 +110,7 @@ void setup()
   lp->setMoveFunc(&deplacementX);
   dp->setMoveFunc(&deplacementY);
 
-  //resetPos();
+  resetPos();
 #ifdef DBG
   Serial.println("MobiBraille started.");
 #endif

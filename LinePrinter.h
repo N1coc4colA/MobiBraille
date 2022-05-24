@@ -3,6 +3,7 @@
 #include <Arduino.h>
 #include <Servo.h>
 
+#define DBG
 #define SPACE_INBETWEEN 11
 #define SPACE_BETWEEN 21
 

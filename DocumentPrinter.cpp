@@ -23,6 +23,8 @@ void DocumentPrinter::setMoveFunc(void (*func)(int))
 
 void DocumentPrinter::printDocument(const char *buff, size_t s)
 {
+  Serial.println("Data to print:");
+  Serial.println(buff);
   c_buff = buff;
   c_l = s;
   c_spos = 0;

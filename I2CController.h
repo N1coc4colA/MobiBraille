@@ -3,7 +3,7 @@
 #include <Arduino.h>
 #include "Grove_I2C_Motor_Driver.h"
 
-//#define DBG
+#define DBG
 
 class I2CController
 {
