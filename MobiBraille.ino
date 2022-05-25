@@ -4,8 +4,8 @@
 #include "DocumentPrinter.h"
 #include "Grove_I2C_Motor_Driver.h"
 
-#define LP_C 8
-#define LP_P 9
+#define LP_C 6
+#define LP_P 7
 #define BI_RX 10
 #define BI_TX 11
 #define FC_P 5
