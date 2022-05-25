@@ -8,7 +8,7 @@
 #define LP_P 7
 #define BI_RX 10
 #define BI_TX 11
-#define FC_P 5
+#define FC_P 8
 #define I2C_ADDRESS 0x0f
 
 #define DBG
