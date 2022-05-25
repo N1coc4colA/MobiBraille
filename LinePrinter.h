@@ -38,7 +38,6 @@ private:
 	int pinServoPoincons = 0;
 	int pinServoCremaillere = 0;
 
-	int angle_init = 45;
 	int column1 = 0;
 	int column2 = 0;
 	int char_limite = 20;

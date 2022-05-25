@@ -5,8 +5,12 @@ LinePrinter::LinePrinter(int p_p, int p_c)
 {
   ServoPoincons.attach(pinServoPoincons);
   ServoCremaillere.attach(pinServoCremaillere);
-  ServoPoincons.write(angle_init);
-  ServoCremaillere.write(90);
+  
+  ServoPoincons.write(0);
+  ServoCremaillere.write(0);
+  
+  ServoPoincons.writeMicroseconds(1500);
+  ServoCremaillere.writeMicroseconds(1500);
 
   cleanup();
 }
@@ -211,10 +215,10 @@ double LinePrinter::columnToAngle(int colone)
 }
 
 void LinePrinter::apply(){
-  ServoCremaillere.write(95);
-  delay(80);
+  ServoCremaillere.write(45);
+  delay(1000);
   ServoCremaillere.write(0);
-  delay(25);
+  delay(10);
 }
 
 void LinePrinter::rotate(double angle)
