@@ -4,7 +4,7 @@
 #include "Grove_I2C_Motor_Driver.h"
 
 #define DBG
-#define DEFAULT_SPEED 150
+#define DEFAULT_SPEED 350
 
 class I2CController
 {

@@ -4,8 +4,10 @@
 #include <Servo.h>
 
 #define DBG
-#define SPACE_INBETWEEN 11
-#define SPACE_BETWEEN 21
+#define SPACE_INBETWEEN -22
+#define SPACE_BETWEEN -42
+#define PC_DEG 145
+#define PP_DEG 7.05
 
 class LinePrinter
 {
@@ -24,6 +26,9 @@ public:
 
   static double columnToAngle(int column);
 
+  Servo ServoPoincons;
+  Servo ServoCremaillere;
+
 protected:
   void printPart(double angle);
   void prepareCharacter(char c);
@@ -32,8 +37,6 @@ protected:
   void print(char c);
 
 private:
-	Servo ServoPoincons;
-	Servo ServoCremaillere;
 
 	int pinServoPoincons = 0;
 	int pinServoCremaillere = 0;

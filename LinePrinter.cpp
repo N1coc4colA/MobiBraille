@@ -6,9 +6,9 @@ LinePrinter::LinePrinter(int p_p, int p_c)
   ServoPoincons.attach(pinServoPoincons);
   ServoCremaillere.attach(pinServoCremaillere);
   
-  ServoPoincons.write(0);
+  ServoPoincons.write(PP_DEG);
   ServoCremaillere.write(0);
-  
+
   ServoPoincons.writeMicroseconds(1500);
   ServoCremaillere.writeMicroseconds(1500);
 
@@ -42,6 +42,7 @@ void LinePrinter::processData()
     Serial.println(c_buff[c_pos]);
 #endif
     prepareCharacter(c_buff[c_pos]);
+    print(c_buff[c_pos]);
     if (c_pos != (c_l-1)) {
       deplacementX(SPACE_BETWEEN);
     }
@@ -214,9 +215,11 @@ double LinePrinter::columnToAngle(int colone)
   return 0;
 }
 
-void LinePrinter::apply(){
-  ServoCremaillere.write(45);
-  delay(1000);
+void LinePrinter::apply()
+{
+  Serial.println("Applying.");
+  ServoCremaillere.write(PC_DEG);
+  delay(1500);
   ServoCremaillere.write(0);
   delay(10);
 }
@@ -238,9 +241,12 @@ void LinePrinter::print(char c)
  if (deplacementX == NULL) {
     return;
   }
+  Serial.println(c);
   printPart(columnToAngle(column1));
   deplacementX(SPACE_INBETWEEN);
   printPart(columnToAngle(column2));
+  //Reset the angle.
+  ServoPoincons.write(PP_DEG);
 }
 
 void LinePrinter::setMoveFunc(void (*func)(int))
@@ -252,4 +258,3 @@ void LinePrinter::setGotoOrigin(void (*f)())
 {
   gotoOrigin = f;
 }
-

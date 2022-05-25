@@ -5,8 +5,8 @@ static I2CController *m_ptr2 = NULL;
 
 void hiddenISR1()
 {
-  #ifdef DBG
-  Serial.println(m_ptr1->pos);
+#ifdef DBG
+  //Serial.println(m_ptr1->pos);
 #endif
   if (m_ptr1 == NULL) {
     return;
@@ -135,4 +135,3 @@ void I2CController::moveUntil(bool uw, int v, bool (*func)())
 #endif
   stop();
 }
-

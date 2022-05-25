@@ -9,6 +9,9 @@ DocumentPrinter::DocumentPrinter(LinePrinter *l)
 
 void DocumentPrinter::cleanup()
 {
+  if (c_buff != NULL) {
+    Serial.println("Printing ended");
+  }
   c_spos = 0;
   c_p = 0;
   c_l = 0;

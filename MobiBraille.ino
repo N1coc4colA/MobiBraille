@@ -41,7 +41,7 @@ void resetPos()
 #ifdef DBG
   Serial.println("Reseting pos...");
 #endif
-  ctrlx->moveUntil(true, 150, &readState);
+  ctrlx->moveUntil(true, 200, &readState);
 
   //We need a minimum delay to ensure it is alright.
   unsigned long source = millis();
@@ -73,6 +73,7 @@ void handleAbort()
 {
   dp->cleanup();
   lp->cleanup();
+  resetPos();
 }
 
 bool documentState()
@@ -124,6 +125,10 @@ void setup()
   lp->setMoveFunc(&deplacementX);
   lp->setGotoOrigin(&moveToOrigin);
   dp->setMoveFunc(&deplacementY);
+
+  
+  lp->ServoPoincons.write(0);
+  lp->ServoCremaillere.write(0);
 
   resetPos();
 #ifdef DBG
