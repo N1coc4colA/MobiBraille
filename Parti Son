@@ -17,7 +17,8 @@ void loop()
       val=analogRead(0);   //connect mic sensor to Analog 0
       Serial.println(val,DEC);//print the sound value to serial
       delay(100);
-      if (bluetooth.available()) {
+      
+  if (bluetooth.available()) {
   message = bluetooth.read();
         Serial.print(message);
     }
